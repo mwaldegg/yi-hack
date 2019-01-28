@@ -1,4 +1,3 @@
-# cat check_motion.sh
 #!/bin/sh
 # each minute, check for a new video file (which is created in case of motion detection)
 # and if found, create the appropriate file for the http server
@@ -16,10 +15,10 @@ led() {
     #    -yoff
 
     # first, kill current led_ctl process
-    kill $(ps | grep led_ctl | grep -v grep | awk '{print $1}')                                                      
-    # then process                                                                                                   
+    kill $(ps | grep led_ctl | grep -v grep | awk '{print $1}')
+    # then process
     /home/led_ctl $@ &
-                                                                                                                     
+
 }
 
 
@@ -29,6 +28,8 @@ led() {
 echo "Starting: Motion Detection"
 led -boff -bfast
 echo "Led: Blue flashing"
+touch /home/hd1/record/lastboot
+
 
 cd /home/hd1/record/
 
@@ -41,10 +42,12 @@ while [ 1 -eq 1 ]
        echo "Motion detected wihin last minute"
        echo "LED: blue"
        led -boff -bon
+       wget 'http://192.168.200.64:8080/remote?action=MONITORON'  -q > /dev/null 2&>1 #Enable MagicMirror
     else
        echo "no Motion detected"
        led -boff -yon
        echo "LED: yellow"
+       wget 'http://192.168.200.64:8080/remote?action=MONITOROFF'  -q > /dev/null 2&>1 #Disable MagicMirror
     fi
 
     sleep 10
