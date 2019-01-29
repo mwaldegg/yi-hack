@@ -1,3 +1,4 @@
+# cat check_motion.sh
 #!/bin/sh
 # each minute, check for a new video file (which is created in case of motion detection)
 # and if found, create the appropriate file for the http server
