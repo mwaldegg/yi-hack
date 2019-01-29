@@ -21,22 +21,19 @@ led() {
 
 }
 
-laststate=new
-
-#mtime=1 #Search for Motion in last n Minutes
-
+laststate="init"
 
 echo "Starting: Motion Detection"
 led -boff -bfast
 echo "Led: Blue flashing"
-touch /home/hd1/record/lastboot
+echo $(date) > /home/hd1/record/lastboot
 
 
 cd /home/hd1/record/
 
 while [ 1 -eq 1 ]
   do
-    motion_file=$(find . -type f -name "*.mp4" -mmin -2 | tail -1)
+    motion_file=$(find . -type f -name "*.mp4*" -mmin -5 | tail -1)
     echo "M="$motion_file
     echo $motion_file | sed "s/.\//record\//" > /home/hd1/test/http/motion
     led -boff -bfast
